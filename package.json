@@ -1,0 +1,23 @@
+{
+  "name": "LiquidityPool",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn blueprint build",
+    "deploy": "yarn blueprint run"
+  },
+  "dependencies": {
+    "@tact-lang/compiler": ">=1.5.3",
+    "@ton-community/func-js": ">=0.9.0",
+    "@ton/blueprint": "^0.29.0",
+    "@ton/core": ">=0.59.0",
+    "@ton/crypto": ">=3.3.0",
+    "@ton/sandbox": "^0.27.1",
+    "@ton/tolk-js": ">=0.6.0",
+    "@ton/ton": ">=15.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "*",
+    "typescript": ">=2.7"
+  }
+}
