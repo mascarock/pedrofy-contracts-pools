@@ -1,168 +1,167 @@
-# TON DEX - Protocolo de Intercambio Descentralizado en TON
+# TON DEX - Decentralized Exchange Protocol on TON
 
-Este proyecto implementa un protocolo de intercambio descentralizado (DEX) en la blockchain TON, inspirado en el modelo AMM (Automated Market Maker) similar a Uniswap. El sistema permite crear pares de intercambio de tokens, agregar/quitar liquidez, y realizar operaciones de swap entre tokens.
+This project implements a decentralized exchange protocol (DEX) on the TON blockchain, inspired by the AMM (Automated Market Maker) model similar to Uniswap. The system allows creating token exchange pairs, adding/removing liquidity, and performing swap operations between tokens.
 
-## Estructura del Proyecto
+## Project Structure
 
-El proyecto consta de dos contratos principales escritos en FunC y sus correspondientes wrappers en TypeScript:
+The project consists of two main contracts written in FunC and their corresponding TypeScript wrappers:
 
-1. **Factory Contract**: Gestiona la creación de pares de intercambio.
-2. **Pair Contract**: Implementa la lógica de liquidez y swap para cada par de tokens.
+1. **Factory Contract**: Manages the creation of exchange pairs.
+2. **Pair Contract**: Implements the liquidity and swap logic for each token pair.
 
-## Arquitectura
+## Architecture
 
 ### Factory Contract
 
-El contrato Factory es el punto central del protocolo, responsable de:
+The Factory contract is the central point of the protocol, responsible for:
 
-- Crear nuevos pares de intercambio (cada par es una instancia del contrato Pair)
-- Mantener un registro de todos los pares existentes
-- Gestionar la configuración global como las comisiones predeterminadas
-- Administrar la recolección de comisiones
+- Creating new exchange pairs (each pair is an instance of the Pair contract)
+- Maintaining a registry of all existing pairs
+- Managing global configuration such as default fees
+- Administering fee collection
 
 ### Pair Contract
 
-Cada contrato Pair representa un par de intercambio entre dos tokens específicos y maneja:
+Each Pair contract represents an exchange pair between two specific tokens and handles:
 
-- Agregar liquidez al pool
-- Remover liquidez del pool
-- Operaciones de swap entre los dos tokens
-- Transferencia de tokens LP (Liquidity Provider)
-- Cálculo automático de precios basado en la fórmula x * y = k
+- Adding liquidity to the pool
+- Removing liquidity from the pool
+- Swap operations between the two tokens
+- Transfer of LP (Liquidity Provider) tokens
+- Automatic price calculation based on the formula x * y = k
 
-## Comunicación entre contratos
+## Communication between contracts
 
-1. El Factory Contract despliega nuevos contratos Pair con sus respectivas configuraciones iniciales.
-2. El Factory mantiene un registro de direcciones de todos los pares creados.
-3. Los contratos Pair contienen una referencia a su Factory, permitiendo la comunicación bidireccional.
-4. El Factory puede recolectar comisiones acumuladas por los contratos Pair.
+1. The Factory Contract deploys new Pair contracts with their respective initial configurations.
+2. The Factory maintains a registry of addresses for all created pairs.
+3. The Pair contracts contain a reference to their Factory, allowing bidirectional communication.
+4. The Factory can collect fees accumulated by the Pair contracts.
 
-## Instalación y Uso
+## Installation and Usage
 
-### Requisitos previos
+### Prerequisites
 
-- Node.js (v16 o superior)
+- Node.js (v16 or higher)
 - Yarn
 
-### Instalación
+### Installation
 
 ```bash
 yarn install
 ```
 
-### Compilación
+### Compilation
 
-Para compilar los contratos:
+To compile the contracts:
 
 ```bash
 yarn build
 ```
 
-### Despliegue
+### Deployment
 
-#### Desplegar Factory Contract
+#### Deploy Factory Contract
 
 ```bash
 yarn deploy
 ```
 
-Sigue las instrucciones en la terminal para configurar:
-- Seleccionar deployFactoryContract o deployPairContract
-- seleccionar red tesnet o mainnet
-- Seleccionar Billetera Toonkeeper conectar billetera
-- Seguir instrucciones despues de haber desplegado habra un link directo hacia el contrato
+Follow the instructions in the terminal to configure:
+- Select deployFactoryContract or deployPairContract
+- Select testnet or mainnet network
+- Select Toonkeeper Wallet to connect wallet
+- Follow instructions after deployment, there will be a direct link to the contract
 
-### Resolución de problemas
+### Troubleshooting
 
-Si encuentras el error al crear un par, verifica:
+If you encounter an error when creating a pair, verify:
 
-1. Que las direcciones de los tokens estén en el formato correcto
-2. Que los tokens sean diferentes entre sí
-3. Que tengas suficiente TON para la operación (al menos 0.3 TON)
-4. Que el par no exista ya en el Factory
+1. That the token addresses are in the correct format
+2. That the tokens are different from each other
+3. That you have enough TON for the operation (at least 0.3 TON)
+4. That the pair doesn't already exist in the Factory
 
-## Operaciones
+## Operations
 
 ### Factory Contract
 
-- **createPair**: Crea un nuevo par de intercambio (opcode: 0x12a2d48c)
-- **setFee**: Configura la comisión predeterminada (opcode: 0x637f0d2b)
-- **collectFee**: Recolecta comisiones acumuladas (opcode: 0x5dbd0308)
+- **createPair**: Creates a new exchange pair (opcode: 0x12a2d48c)
+- **setFee**: Configures the default fee (opcode: 0x637f0d2b)
+- **collectFee**: Collects accumulated fees (opcode: 0x5dbd0308)
 
 ### Pair Contract
 
-- **addLiquidity**: Añade liquidez al pool (opcode: 0x234c7bef)
-- **removeLiquidity**: Remove liquidez del pool (opcode: 0x5edc1170)
-- **swap**: Intercambia tokens (opcode: 0x107c51ee)
-- **transfer**: Transfiere tokens LP (opcode: 0x7362d09c)
+- **addLiquidity**: Adds liquidity to the pool (opcode: 0x234c7bef)
+- **removeLiquidity**: Removes liquidity from the pool (opcode: 0x5edc1170)
+- **swap**: Exchanges tokens (opcode: 0x107c51ee)
+- **transfer**: Transfers LP tokens (opcode: 0x7362d09c)
 
-## Información técnica
+## Technical Information
 
-### Variables del Factory
+### Factory Variables
 
-- **ctx_owner**: Dirección del propietario del factory
-- **ctx_pairs**: Diccionario de pares (token0, token1) -> dirección_par
-- **ctx_pair_code**: Código del contrato para pares
-- **ctx_default_fee**: Comisión predeterminada para nuevos pares
-- **ctx_fee_collector**: Dirección para recolectar comisiones
-- **ctx_total_pairs**: Contador de pares creados
+- **ctx_owner**: Address of the factory owner
+- **ctx_pairs**: Dictionary of pairs (token0, token1) -> pair_address
+- **ctx_pair_code**: Contract code for pairs
+- **ctx_default_fee**: Default fee for new pairs
+- **ctx_fee_collector**: Address for collecting fees
+- **ctx_total_pairs**: Counter of created pairs
 
-### Variables del Pair
+### Pair Variables
 
-- **ctx_token0_address, ctx_token1_address**: Direcciones de los tokens
-- **ctx_reserve0, ctx_reserve1**: Reservas de tokens
-- **ctx_total_supply**: Suministro total de tokens LP
-- **ctx_lp_balances**: Balances de tokens LP por dirección
-- **ctx_fee**: Comisión del par
-- **ctx_factory_address**: Dirección del factory
+- **ctx_token0_address, ctx_token1_address**: Token addresses
+- **ctx_reserve0, ctx_reserve1**: Token reserves
+- **ctx_total_supply**: Total supply of LP tokens
+- **ctx_lp_balances**: LP token balances by address
+- **ctx_fee**: Pair fee
+- **ctx_factory_address**: Factory address
 
 ## Wrappers
 
-Los wrappers en TypeScript proporcionan una interfaz sencilla para interactuar con los contratos:
+The TypeScript wrappers provide a simple interface to interact with the contracts:
 
-- **LiquidityPool**: Wrapper para el Factory Contract
-- **PairContract**: Wrapper para el Pair Contract
+- **LiquidityPool**: Wrapper for the Factory Contract
+- **PairContract**: Wrapper for the Pair Contract
 
-Estos wrappers facilitan la integración del DEX con aplicaciones frontend o servicios.
+These wrappers facilitate the integration of the DEX with frontend applications or services.
 
-## Fórmulas clave
+## Key Formulas
 
-- **Swap**: Usa la fórmula de producto constante donde `x * y = k`
-- **Comisión**: Se aplica un porcentaje (en basis points) a cada operación
-- **LP Tokens**: Para la primera adición de liquidez, `LP = sqrt(amount0 * amount1)`
+- **Swap**: Uses the constant product formula where `x * y = k`
+- **Fee**: A percentage (in basis points) is applied to each operation
+- **LP Tokens**: For the first liquidity addition, `LP = sqrt(amount0 * amount1)`
 
 
 
-# Script de Creación de Pares - TON DEX
+# Pair Creation Script - TON DEX
 
-Este documento explica el funcionamiento del script `createPair.ts`, que se utiliza para crear nuevos pares de liquidez en el protocolo TON DEX.
+This document explains the functionality of the `createPair.ts` script, which is used to create new liquidity pairs in the TON DEX protocol.
 
-## Descripción
+## Description
 
-El script `createPair.ts` es una herramienta para interactuar con el Factory Contract y crear nuevos pares de intercambio (Pair Contracts) para dos tokens especificados. **Actualmente, este script presenta problemas al intentar crear pares.**
+The `createPair.ts` script is a tool for interacting with the Factory Contract and creating new exchange pairs (Pair Contracts) for two specified tokens. **Currently, this script has issues when trying to create pairs.**
 
-## Funcionamiento
+## Operation
 
-El script sigue los siguientes pasos:
+The script follows these steps:
 
-1. **Conexión al Factory Contract**: Utiliza la dirección proporcionada para conectarse al Factory Contract desplegado.
-2. **Verificación de tokens**: Solicita las direcciones de los dos tokens que formarán el par de intercambio.
-3. **Comprobación de existencia**: Verifica si el par ya existe para evitar duplicados.
-4. **Creación del par**: Envía una transacción al Factory Contract para crear un nuevo par.
-5. **Polling de confirmación**: Espera y verifica repetidamente hasta confirmar que el par ha sido creado.
-6. **Información final**: Muestra detalles sobre el par creado y estadísticas del Factory.
+1. **Connection to Factory Contract**: Uses the provided address to connect to the deployed Factory Contract.
+2. **Token verification**: Requests the addresses of the two tokens that will form the exchange pair.
+3. **Existence check**: Verifies if the pair already exists to avoid duplicates.
+4. **Pair creation**: Sends a transaction to the Factory Contract to create a new pair.
+5. **Confirmation polling**: Repeatedly waits and verifies until confirming that the pair has been created.
+6. **Final information**: Displays details about the created pair and Factory statistics.
 
-## Uso
+## Usage
 
 ```bash
-yarn deploy seleccionar archivo  createpair.ts
+yarn deploy select file createpair.ts
 ```
-- seguir instrucciones 
-- introducir direccion del contrato FactoryContract
-- introducir direccion token0 y token1
+- follow instructions
+- enter the FactoryContract address
+- enter token0 and token1 addresses
 
 
-## Problemas Conocidos
+## Known Issues
 
-🚨 **Este script actualmente está fallando al intentar crear pares.** 🚨
-
+🚨 **This script is currently failing when trying to create pairs.** 🚨
